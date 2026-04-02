@@ -5,7 +5,9 @@ target_link_libraries(nmea_test_main PRIVATE nmea_warnings)
 set(NMEA_FIXTURE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/fixtures)
 
 set(NMEA_UNIT_TESTS
-    test_sentence)
+    test_sentence
+    test_geo
+    test_time)
 
 foreach(name IN LISTS NMEA_UNIT_TESTS)
     add_executable(${name} ${name}.cpp)

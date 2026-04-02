@@ -37,7 +37,9 @@ if(NMEA_COVERAGE)
 endif()
 
 add_library(nmea
-    src/sentence.cpp)
+    src/geo.cpp
+    src/sentence.cpp
+    src/time.cpp)
 target_include_directories(nmea PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
