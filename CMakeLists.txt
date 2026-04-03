@@ -38,6 +38,7 @@ endif()
 
 add_library(nmea
     src/geo.cpp
+    src/parser.cpp
     src/sentence.cpp
     src/time.cpp)
 target_include_directories(nmea PUBLIC
