@@ -40,7 +40,9 @@ add_library(nmea
     src/geo.cpp
     src/parser.cpp
     src/sentence.cpp
-    src/time.cpp)
+    src/stats.cpp
+    src/time.cpp
+    src/track.cpp)
 target_include_directories(nmea PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
