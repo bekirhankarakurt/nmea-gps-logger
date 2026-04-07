@@ -38,6 +38,7 @@ endif()
 
 add_library(nmea
     src/geo.cpp
+    src/geofence.cpp
     src/parser.cpp
     src/sentence.cpp
     src/stats.cpp

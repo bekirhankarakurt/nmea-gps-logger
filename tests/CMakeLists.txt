@@ -10,7 +10,8 @@ set(NMEA_UNIT_TESTS
     test_geo
     test_time
     test_track
-    test_stats)
+    test_stats
+    test_geofence)
 
 foreach(name IN LISTS NMEA_UNIT_TESTS)
     add_executable(${name} ${name}.cpp)
