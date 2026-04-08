@@ -37,6 +37,7 @@ if(NMEA_COVERAGE)
 endif()
 
 add_library(nmea
+    src/export.cpp
     src/geo.cpp
     src/geofence.cpp
     src/parser.cpp
