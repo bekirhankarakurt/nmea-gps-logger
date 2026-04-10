@@ -42,6 +42,8 @@ add_library(nmea
     src/geofence.cpp
     src/io.cpp
     src/parser.cpp
+    src/pipeline.cpp
+    src/replay.cpp
     src/sentence.cpp
     src/stats.cpp
     src/time.cpp
