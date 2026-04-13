@@ -15,7 +15,8 @@ set(NMEA_UNIT_TESTS
     test_export
     test_io
     test_replay
-    test_pipeline)
+    test_pipeline
+    test_cli)
 
 foreach(name IN LISTS NMEA_UNIT_TESTS)
     add_executable(${name} ${name}.cpp)
@@ -24,3 +25,14 @@ foreach(name IN LISTS NMEA_UNIT_TESTS)
     add_test(NAME ${name} COMMAND ${name})
 endforeach()
 
+# End-to-end: replay the fixture through the real binary and validate outputs.
+add_test(NAME cli_replay_end_to_end
+    COMMAND ${CMAKE_COMMAND}
+        -DLOGGER=$<TARGET_FILE:nmea-logger>
+        -DFIXTURE=${NMEA_FIXTURE_DIR}/metu_ride.nmea
+        -DWORKDIR=${CMAKE_CURRENT_BINARY_DIR}/e2e
+        -P ${CMAKE_CURRENT_SOURCE_DIR}/cli_end_to_end.cmake)
+add_test(NAME cli_usage_error COMMAND nmea-logger --bogus)
+set_tests_properties(cli_usage_error PROPERTIES WILL_FAIL TRUE)
+add_test(NAME cli_help COMMAND nmea-logger --help)
+set_tests_properties(cli_help PROPERTIES PASS_REGULAR_EXPRESSION "Usage: nmea-logger")
