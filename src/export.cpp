@@ -38,7 +38,7 @@ std::string json_escape(std::string_view text) {
             default:
                 if (static_cast<unsigned char>(c) < 0x20U) {
                     std::array<char, 8> buf{};
-                    std::snprintf(buf.data(), buf.size(), "\\u%04x", static_cast<unsigned>(c));
+                    static_cast<void>(std::snprintf(buf.data(), buf.size(), "\\u%04x", static_cast<unsigned>(c)));
                     out += buf.data();
                 } else {
                     out.push_back(c);

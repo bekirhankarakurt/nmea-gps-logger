@@ -10,15 +10,10 @@ void StatsAccumulator::add(const TrackPoint& point) {
     ++stats_.points;
     const GeoPoint pos = point.position;
 
-    if (!stats_.bbox_min) {
-        stats_.bbox_min = pos;
-        stats_.bbox_max = pos;
-    } else {
-        stats_.bbox_min->lat_deg = std::min(stats_.bbox_min->lat_deg, pos.lat_deg);
-        stats_.bbox_min->lon_deg = std::min(stats_.bbox_min->lon_deg, pos.lon_deg);
-        stats_.bbox_max->lat_deg = std::max(stats_.bbox_max->lat_deg, pos.lat_deg);
-        stats_.bbox_max->lon_deg = std::max(stats_.bbox_max->lon_deg, pos.lon_deg);
-    }
+    const GeoPoint lo = stats_.bbox_min.value_or(pos);
+    const GeoPoint hi = stats_.bbox_max.value_or(pos);
+    stats_.bbox_min = GeoPoint{std::min(lo.lat_deg, pos.lat_deg), std::min(lo.lon_deg, pos.lon_deg)};
+    stats_.bbox_max = GeoPoint{std::max(hi.lat_deg, pos.lat_deg), std::max(hi.lon_deg, pos.lon_deg)};
 
     if (point.hdop) {
         hdop_sum_ += *point.hdop;

@@ -40,8 +40,8 @@ double initial_bearing_deg(GeoPoint a, GeoPoint b) noexcept {
     return normalize_bearing(rad_to_deg(std::atan2(y, x)));
 }
 
-GeoPoint destination(GeoPoint origin, double bearing_deg, double distance_m) noexcept {
-    const double delta = distance_m / kEarthRadiusM;
+GeoPoint destination(GeoPoint origin, double bearing_deg, double range_m) noexcept {
+    const double delta = range_m / kEarthRadiusM;
     const double theta = deg_to_rad(bearing_deg);
     const double phi1 = deg_to_rad(origin.lat_deg);
     const double lambda1 = deg_to_rad(origin.lon_deg);

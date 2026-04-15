@@ -22,7 +22,7 @@ private:
     double speed_;
     std::optional<double> anchor_tod_;
     double last_offset_{};
-    Clock::time_point anchor_wall_{};
+    Clock::time_point anchor_wall_;
 };
 
 }  // namespace nmea

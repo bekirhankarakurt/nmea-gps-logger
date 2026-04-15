@@ -1,7 +1,8 @@
 #include "nmea/sentence.hpp"
 
+#include <algorithm>
 #include <array>
-#include <cctype>
+#include <numeric>
 #include <optional>
 
 namespace nmea {
@@ -58,11 +59,9 @@ namespace {
 }  // namespace
 
 std::uint8_t compute_checksum(std::string_view payload) noexcept {
-    std::uint8_t sum = 0;
-    for (const char c : payload) {
-        sum = static_cast<std::uint8_t>(sum ^ static_cast<std::uint8_t>(c));
-    }
-    return sum;
+    return std::accumulate(payload.begin(), payload.end(), std::uint8_t{0}, [](std::uint8_t sum, char c) {
+        return static_cast<std::uint8_t>(sum ^ static_cast<std::uint8_t>(c));
+    });
 }
 
 Result<Sentence> split_sentence(std::string_view line, bool require_checksum) {
@@ -103,10 +102,8 @@ Result<Sentence> split_sentence(std::string_view line, bool require_checksum) {
 
     const auto comma = payload.find(',');
     const std::string_view address = payload.substr(0, comma);
-    for (const char c : address) {
-        if (!is_upper_alnum(c)) {
-            return ParseError::BadAddress;
-        }
+    if (!std::all_of(address.begin(), address.end(), is_upper_alnum)) {
+        return ParseError::BadAddress;
     }
     // Proprietary sentences ("$PGRMZ", "$PUBX") use 'P' plus a vendor-defined type.
     const bool proprietary = address.size() >= 2 && address.front() == 'P';

@@ -28,7 +28,9 @@ template <typename T>
 class Result {
 public:
     // Implicit by design so parsers can `return value;` or `return ParseError::X;`.
+    // cppcheck-suppress noExplicitConstructor
     Result(T value) : data_(std::move(value)) {}  // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
+    // cppcheck-suppress noExplicitConstructor
     Result(ParseError error) : data_(error) {}    // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 
     [[nodiscard]] bool ok() const noexcept { return std::holds_alternative<T>(data_); }

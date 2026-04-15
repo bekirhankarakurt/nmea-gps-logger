@@ -44,8 +44,8 @@ struct Geodesic {
 /// Initial great-circle bearing from @p a to @p b in degrees [0, 360).
 [[nodiscard]] double initial_bearing_deg(GeoPoint a, GeoPoint b) noexcept;
 
-/// Point reached travelling @p distance_m along @p bearing_deg on a sphere.
-[[nodiscard]] GeoPoint destination(GeoPoint origin, double bearing_deg, double distance_m) noexcept;
+/// Point reached travelling @p range_m metres along @p bearing_deg on a sphere.
+[[nodiscard]] GeoPoint destination(GeoPoint origin, double bearing_deg, double range_m) noexcept;
 
 /// Vincenty inverse on WGS-84. Returns nullopt when the iteration fails to
 /// converge (nearly antipodal points).

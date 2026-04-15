@@ -67,11 +67,11 @@ std::string format_iso8601(double unix_seconds) {
     const Date d = civil_from_days(t.days);
     std::array<char, 40> buf{};
     if (t.millis != 0) {
-        std::snprintf(buf.data(), buf.size(), "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ", d.year, d.month,
-                      d.day, t.hour, t.minute, t.second, t.millis);
+        static_cast<void>(std::snprintf(buf.data(), buf.size(), "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ", d.year, d.month,
+                      d.day, t.hour, t.minute, t.second, t.millis));
     } else {
-        std::snprintf(buf.data(), buf.size(), "%04d-%02d-%02dT%02d:%02d:%02dZ", d.year, d.month,
-                      d.day, t.hour, t.minute, t.second);
+        static_cast<void>(std::snprintf(buf.data(), buf.size(), "%04d-%02d-%02dT%02d:%02d:%02dZ", d.year, d.month,
+                      d.day, t.hour, t.minute, t.second));
     }
     return std::string(buf.data());
 }
@@ -79,15 +79,15 @@ std::string format_iso8601(double unix_seconds) {
 std::string format_time_of_day(double seconds_of_day) {
     const SplitTime t = split(seconds_of_day);
     std::array<char, 16> buf{};
-    std::snprintf(buf.data(), buf.size(), "%02d:%02d:%02d", t.hour, t.minute, t.second);
+    static_cast<void>(std::snprintf(buf.data(), buf.size(), "%02d:%02d:%02d", t.hour, t.minute, t.second));
     return std::string(buf.data());
 }
 
 std::string format_duration(double seconds) {
     const auto total = static_cast<std::int64_t>(std::llround(seconds < 0.0 ? 0.0 : seconds));
     std::array<char, 32> buf{};
-    std::snprintf(buf.data(), buf.size(), "%lld:%02lld:%02lld", static_cast<long long>(total / 3600),
-                  static_cast<long long>(total / 60 % 60), static_cast<long long>(total % 60));
+    static_cast<void>(std::snprintf(buf.data(), buf.size(), "%lld:%02lld:%02lld", static_cast<long long>(total / 3600),
+                  static_cast<long long>(total / 60 % 60), static_cast<long long>(total % 60)));
     return std::string(buf.data());
 }
 
