@@ -1,0 +1,37 @@
+name: Bug report
+description: Report incorrect parsing, a crash or wrong output
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you expect and what did you get instead?
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command line
+      render: bash
+      placeholder: nmea-logger --serial /dev/ttyUSB0 --baud 9600 --gpx out.gpx
+    validations:
+      required: true
+  - type: textarea
+    id: nmea
+    attributes:
+      label: NMEA sample
+      description: A few raw sentences that reproduce the problem (record with `--tee capture.nmea`).
+      render: text
+  - type: input
+    id: receiver
+    attributes:
+      label: Receiver or app
+      placeholder: u-blox NEO-M8N, GPSd forwarder, Android "NMEA over UDP" app ...
+  - type: input
+    id: version
+    attributes:
+      label: Version and platform
+      placeholder: "nmea-logger 1.0.0, Ubuntu 24.04 x86_64"
+    validations:
+      required: true
