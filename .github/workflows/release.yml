@@ -19,7 +19,7 @@ jobs:
           - target: linux-aarch64
             runner: ubuntu-24.04-arm
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build and test
         run: |
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DNMEA_WARNINGS_AS_ERRORS=ON \
@@ -35,7 +35,7 @@ jobs:
           cp README.md LICENSE CHANGELOG.md "dist/${name}/"
           cp -r tests/fixtures "dist/${name}/samples"
           tar -C dist -czf "${name}.tar.gz" "${name}"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.target }}
           path: "*.tar.gz"
@@ -46,8 +46,8 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
         with:
           path: dist
           merge-multiple: true
