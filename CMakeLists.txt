@@ -40,6 +40,7 @@ add_library(nmea
     src/export.cpp
     src/geo.cpp
     src/geofence.cpp
+    src/io.cpp
     src/parser.cpp
     src/sentence.cpp
     src/stats.cpp
