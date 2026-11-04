@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: GCC Release
+            cxx: g++
+            build_type: Release
+            sanitize: OFF
+          - name: Clang Release
+            cxx: clang++
+            build_type: Release
+            sanitize: OFF
+          - name: GCC ASan+UBSan
+            cxx: g++
+            build_type: Debug
+            sanitize: ON
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: >
+          cmake -S . -B build
+          -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DNMEA_WARNINGS_AS_ERRORS=ON
+          -DNMEA_SANITIZE=${{ matrix.sanitize }}
+      - name: Build
+        run: cmake --build build -j "$(nproc)"
+      - name: Test
+        env:
+          ASAN_OPTIONS: detect_leaks=1:abort_on_error=1
+          UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
+        run: ctest --test-dir build --output-on-failure
+      - name: Smoke run
+        run: ./build/nmea-logger --file tests/fixtures/metu_ride.nmea --quiet --fence-circle ne-corner:39.8920,32.7860,60
