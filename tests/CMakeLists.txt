@@ -6,6 +6,7 @@ set(NMEA_FIXTURE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/fixtures)
 
 set(NMEA_UNIT_TESTS
     test_sentence
+    test_parser
     test_geo
     test_time)
 
