@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.target }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          - target: linux-x86_64
+            runner: ubuntu-24.04
+          - target: linux-aarch64
+            runner: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and test
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DNMEA_WARNINGS_AS_ERRORS=ON \
+            -DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc"
+          cmake --build build -j "$(nproc)"
+          ctest --test-dir build --output-on-failure
+      - name: Package
+        run: |
+          name="nmea-gps-logger-${GITHUB_REF_NAME}-${{ matrix.target }}"
+          mkdir -p "dist/${name}/bin"
+          cp build/nmea-logger "dist/${name}/bin/"
+          strip "dist/${name}/bin/nmea-logger"
+          cp README.md LICENSE CHANGELOG.md "dist/${name}/"
+          cp -r tests/fixtures "dist/${name}/samples"
+          tar -C dist -czf "${name}.tar.gz" "${name}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: "*.tar.gz"
+
+  release:
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Checksums and notes
+        run: |
+          cd dist && sha256sum *.tar.gz > SHA256SUMS && cat SHA256SUMS && cd ..
+          version="${GITHUB_REF_NAME#v}"
+          awk -v v="$version" '
+            $0 ~ "^## \\[" v "\\]" {found=1; next}
+            found && /^## \[/ {exit}
+            found && /^\[.*\]: / {exit}
+            found {print}
+          ' CHANGELOG.md > notes.md
+          test -s notes.md
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh release create "$GITHUB_REF_NAME" dist/*.tar.gz dist/SHA256SUMS
+          --title "nmea-gps-logger $GITHUB_REF_NAME" --notes-file notes.md --verify-tag
