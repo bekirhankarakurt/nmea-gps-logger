@@ -37,6 +37,7 @@ if(NMEA_COVERAGE)
 endif()
 
 add_library(nmea
+    src/cli.cpp
     src/export.cpp
     src/geo.cpp
     src/geofence.cpp
@@ -52,6 +53,13 @@ target_include_directories(nmea PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 target_link_libraries(nmea PRIVATE nmea_warnings)
+
+add_executable(nmea-logger app/main.cpp)
+target_compile_definitions(nmea-logger PRIVATE NMEA_LOGGER_VERSION="${PROJECT_VERSION}")
+target_link_libraries(nmea-logger PRIVATE nmea nmea_warnings)
+
+include(GNUInstallDirs)
+install(TARGETS nmea-logger RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 if(NMEA_BUILD_TESTS)
     enable_testing()
