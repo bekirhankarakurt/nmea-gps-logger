@@ -66,7 +66,7 @@ public:
 /// Reads a log file, or standard input for path "-".
 class FileSource final : public LineSource {
 public:
-    explicit FileSource(const std::string& path);
+    explicit FileSource(std::string path);
     [[nodiscard]] std::optional<std::string> next_line() override;
     [[nodiscard]] std::string describe() const override;
 

@@ -1,6 +1,7 @@
 #include "nmea/parser.hpp"
 
 #include <charconv>
+#include <cmath>
 #include <cstddef>
 #include <system_error>
 
@@ -143,7 +144,7 @@ public:
             bad_ = true;
             return std::nullopt;
         }
-        const double degrees = static_cast<double>(static_cast<long>(*value / 100.0));
+        const double degrees = std::floor(*value / 100.0);
         const double minutes = *value - degrees * 100.0;
         const double limit = latitude ? 90.0 : 180.0;
         double result = degrees + minutes / 60.0;

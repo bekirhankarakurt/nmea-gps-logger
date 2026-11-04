@@ -134,7 +134,7 @@ void print_summary(const nmea::Pipeline& pipeline, bool json) {
                   << fmt(s.duration_s, 1) << R"(,"moving_time_s":)" << fmt(s.moving_time_s, 1)
                   << R"(,"max_speed_kmh":)" << fmt(s.max_speed_mps * 3.6, 2) << R"(,"avg_speed_kmh":)"
                   << fmt(s.avg_speed_mps * 3.6, 2);
-        if (s.mean_hdop) {
+        if (s.mean_hdop && s.max_hdop) {
             std::cout << R"(,"mean_hdop":)" << fmt(*s.mean_hdop, 2) << R"(,"max_hdop":)" << fmt(*s.max_hdop, 2);
         }
         std::cout << R"(,"events":)" << pipeline.events().size() << "}\n";
@@ -153,10 +153,10 @@ void print_summary(const nmea::Pipeline& pipeline, bool json) {
               << "speed       max " << fmt(s.max_speed_mps * 3.6, 1) << " km/h, avg "
               << fmt(s.avg_speed_mps * 3.6, 1) << " km/h, moving avg " << fmt(s.avg_moving_speed_mps * 3.6, 1)
               << " km/h\n";
-    if (s.mean_hdop) {
+    if (s.mean_hdop && s.max_hdop) {
         std::cout << "hdop        mean " << fmt(*s.mean_hdop, 2) << ", max " << fmt(*s.max_hdop, 2) << '\n';
     }
-    if (s.min_altitude_m) {
+    if (s.min_altitude_m && s.max_altitude_m) {
         std::cout << "altitude    " << fmt(*s.min_altitude_m, 1) << " .. " << fmt(*s.max_altitude_m, 1)
                   << " m, gain " << fmt(s.elevation_gain_m, 1) << " m\n";
     }

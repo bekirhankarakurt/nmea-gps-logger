@@ -75,7 +75,7 @@ std::optional<std::string> LineBuffer::take_remainder() {
     return rest;
 }
 
-FileSource::FileSource(const std::string& path) : path_(path) {
+FileSource::FileSource(std::string path) : path_(std::move(path)) {
     if (path_ != "-") {
         file_.open(path_);
         if (!file_) {
@@ -203,8 +203,7 @@ std::string SerialSource::describe() const {
 }
 
 UdpSource::UdpSource(const std::string& bind_address, std::uint16_t port, const std::atomic<bool>& stop)
-    : address_(bind_address), port_(port), stop_(&stop) {
-    fd_ = UniqueFd(::socket(AF_INET, SOCK_DGRAM | SOCK_CLOEXEC, 0));
+    : address_(bind_address), port_(port), stop_(&stop), fd_(::socket(AF_INET, SOCK_DGRAM | SOCK_CLOEXEC, 0)) {
     if (!fd_.valid()) {
         throw_errno("socket");
     }

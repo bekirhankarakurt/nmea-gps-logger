@@ -262,7 +262,7 @@ CliParseResult parse_cli(const std::vector<std::string>& args) {
             if (!x || *x <= 0.0) {
                 return fail("max HDOP must be a positive number: " + *v);
             }
-            o.pipeline.max_hdop = *x;
+            o.pipeline.max_hdop = x;
         } else if (a == "--vincenty") {
             o.pipeline.distance = DistanceMethod::Vincenty;
         } else if (a == "--no-checksum") {
@@ -276,7 +276,7 @@ CliParseResult parse_cli(const std::vector<std::string>& args) {
             if (!x || *x <= 0.0) {
                 return fail("duration must be a positive number: " + *v);
             }
-            o.duration_s = *x;
+            o.duration_s = x;
         } else if (a == "--fence-circle") {
             const auto v = value();
             if (!v) {
